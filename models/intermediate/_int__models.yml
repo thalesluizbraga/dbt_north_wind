@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: int__orders_grouped_by_employees  
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+          - unique
+      - name: last_name
+      - name: first_name
+      - name: qt_orders
+
+  - name: int__orders_grouped_by_products 
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+      - name: qt_orders
+
+  - name: int__orders_grouped_by_month 
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+      - name: month
+      - name: date_first_purchase
+      - name: date_last_purchase
+      - name: qtd_orders
+      - name: total_quantity
+      - name: total_spend

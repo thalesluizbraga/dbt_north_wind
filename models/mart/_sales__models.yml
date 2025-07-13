@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: sales__obt_customer  
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+      - name: last_ncompany_name
+      - name: contact_name
+      - name: contact_title
+      - name: address
+      - name: city
+      - name: region
+      - name: phone
+      - name: month
+      - name: date_first_purchase
+      - name: date_last_purchase
+      - name: qtd_orders
+      - name: total_quantity
+      - name: total_spend
+
+    

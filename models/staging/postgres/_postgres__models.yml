@@ -1,0 +1,155 @@
+version: 2
+
+models:
+  - name: stg_postgresdb__category  
+    columns:
+      - name: category_id
+        tests:
+          - not_null
+          - unique
+      - name: category_name
+      - name: col_description
+
+  - name: stg_postgresdb__customer_demographic 
+    columns:
+      - name: customer_type_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_desc
+
+  - name: stg_postgresdb__customer  
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+      - name: contact_name
+      - name: contact_title
+      - name: address
+      - name: city
+      - name: region
+      - name: phone
+    
+  - name: stg_postgresdb__employee_territories  
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+          - unique
+      - name: territory_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_postgresdb__employee  
+    columns:
+      - name: employee_id
+        tests:
+          - not_null
+          - unique
+      - name: last_name
+      - name: first_name
+
+  - name: stg_postgresdb__order_details  
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+      - name: unit_price
+      - name: quantity
+      - name: discount
+
+  - name: stg_postgresdb__orders  
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: employee_id
+        tests:
+          - not_null
+          - unique
+      - name: order_date
+      - name: required_date
+      - name: shipped_date
+      - name: ship_via
+      - name: freight
+      - name: ship_name
+
+  - name: stg_postgresdb__products  
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+      - name: product_name
+      - name: supplier_id
+        tests:
+          - not_null
+          - unique
+      - name: category_id
+        tests:
+          - not_null
+          - unique
+      - name: quantity_per_unit
+      - name: unit_price
+      - name: units_in_stock
+      - name: units_on_order
+      - name: reorder_level
+      - name: discontinued
+      
+  - name: stg_postgresdb__region  
+    columns:
+      - name: region_id
+        tests:
+          - not_null
+          - unique
+      - name: region_description
+   
+  - name: stg_postgresdb__shippers  
+    columns:
+      - name: shipper_id
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+      - name: phone
+  
+  - name: stg_postgresdb__suppliers  
+    columns:
+      - name: supplier_id
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+      - name: contact_name
+
+  - name: stg_postgresdb__territories  
+    columns:
+      - name: territory_id
+        tests:
+          - not_null
+          - unique
+      - name: territory_description
+      - name: region_id
+
+  - name: stg_postgresdb__us_states  
+    columns:
+      - name: state_id
+        tests:
+          - not_null
+          - unique
+      - name: state_name
+      - name: state_abbr
+      - name: state_region
