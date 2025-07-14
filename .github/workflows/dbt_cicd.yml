@@ -1,0 +1,35 @@
+name: dbt CI/CD
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4  # Ensure it finishes within 5m window
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dbt and dependencies
+        run: |
+          pip install -r requirements.txt
+          dbt deps
+
+      - name: Run dbt
+        env:
+          DBT_HOST: ${{ secrets.SUPABASE_HOST }}
+          DBT_USER: ${{ secrets.SUPABASE_USER }}
+          DBT_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+          DBT_PORT: ${{ secrets.SUPABASE_PORT }}
+          DBT_DBNAME: ${{ secrets.SUPABASE_DBNAME }}
+        run: |
+          dbt run --target prod --profiles-dir .
+          dbt test --target prod --profiles-dir .
