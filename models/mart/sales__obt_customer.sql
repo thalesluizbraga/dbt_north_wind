@@ -48,8 +48,7 @@ select
     a.date_last_purchase,
     a.qtd_orders,
     a.total_quantity,
-    a.total_spend,
-    'TESTE' as teste
+    a.total_spend
 from 
     tb_int__orders_grouped_by_month as a
 left join 
