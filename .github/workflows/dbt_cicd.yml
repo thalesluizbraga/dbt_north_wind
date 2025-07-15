@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dbt and dependencies
         run: |
-          pip install -r ../dbt_northwind/requirements.txt
+          pip install -r dbt_northwind/requirements.txt
           dbt deps
 
       - name: Run dbt
