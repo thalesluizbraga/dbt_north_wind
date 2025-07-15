@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dbt and dependencies
         run: |
-          pip install -r dbt_northwind/requirements.txt
+          pip install -r ./dbt_northwind/requirements.txt
           dbt deps
 
       - name: Run dbt
@@ -33,3 +33,9 @@ jobs:
         run: |
           dbt run --target prod --profiles-dir .
           dbt test --target prod --profiles-dir .
+        
+      - name: Debug file structure
+        run: |
+          pwd
+          ls -R
+          cat dbt_northwind/requirements.txt || echo "File not found"
