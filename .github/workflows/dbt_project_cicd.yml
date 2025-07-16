@@ -1,0 +1,50 @@
+name: dbt CI/CD
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Gets complete history
+          ref: main  # Explicitly specify your branch name
+
+      - name: Debug repository structure
+        run: |
+          echo "### Current directory: ###"
+          pwd
+          echo "### Root contents: ###"
+          ls -la
+          echo "### dbt_northwind contents: ###"
+          ls -la dbt_northwind/ || echo "Directory not found"
+          echo "### File contents: ###"
+          cat dbt_northwind/requirements.txt || echo "File not found"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11.3"
+
+      - name: Install dbt and dependencies
+        run: |
+          echo "Installing from: $(pwd)/dbt_northwind/requirements.txt"
+          pip install -r ./dbt_northwind/requirements.txt
+          dbt deps
+
+      - name: Run dbt
+        env:
+          DBT_HOST: ${{ secrets.SUPABASE_HOST }}
+          DBT_USER: ${{ secrets.SUPABASE_USER }}
+          DBT_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
+          DBT_PORT: ${{ secrets.SUPABASE_PORT }}
+          DBT_DBNAME: ${{ secrets.SUPABASE_DBNAME }}
+        run: |
+          dbt run --target prod --profiles-dir .
+          dbt test --target prod --profiles-dir .
