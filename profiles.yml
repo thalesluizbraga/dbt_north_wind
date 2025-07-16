@@ -1,0 +1,12 @@
+dbt_northwind:
+  outputs:
+    dev:
+      dbname: postgres
+      host: db.sldiewavpdlegynfcqhd.supabase.co
+      pass: 11221cct031
+      port: 5432
+      schema: public
+      threads: 1
+      type: postgres
+      user: postgres
+  target: dev
