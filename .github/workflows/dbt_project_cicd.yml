@@ -13,19 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Gets complete history
-          ref: main  # Explicitly specify your branch name
-
-      - name: Debug repository structure
-        run: |
-          echo "### Current directory: ###"
-          pwd
-          echo "### Root contents: ###"
-          ls -la
-          echo "### dbt_northwind contents: ###"
-          ls -la dbt_northwind/ || echo "Directory not found"
-          echo "### File contents: ###"
-          cat dbt_northwind/requirements.txt || echo "File not found"
+          fetch-depth: 0
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -34,17 +23,30 @@ jobs:
 
       - name: Install dbt and dependencies
         run: |
-          echo "Installing from: $(pwd)/dbt_northwind/requirements.txt"
-          pip install -r requirements.txt
+          pip install dbt-postgres  # or dbt-snowflake, dbt-bigquery, etc.
+          pip install -r requirements.txt  # if you have one
           dbt deps
 
-      - name: Run dbt
-        env:
-          DBT_HOST: ${{ secrets.SUPABASE_HOST }}
-          DBT_USER: ${{ secrets.SUPABASE_USER }}
-          DBT_PASSWORD: ${{ secrets.SUPABASE_PASSWORD }}
-          DBT_PORT: ${{ secrets.SUPABASE_PORT }}
-          DBT_DBNAME: ${{ secrets.SUPABASE_DBNAME }}
+      - name: Create profiles.yml
         run: |
-          dbt run --target prod --profiles-dir .
-          dbt test --target prod --profiles-dir .
+          mkdir -p ~/.dbt
+          cat <<EOF > ~/.dbt/profiles.yml
+          dbt_northwind:
+            target: prod
+            outputs:
+              prod:
+                type: postgres
+                host: ${{ secrets.SUPABASE_HOST }}
+                user: ${{ secrets.SUPABASE_USER }}
+                password: ${{ secrets.SUPABASE_PASSWORD }}
+                port: ${{ secrets.SUPABASE_PORT }}
+                dbname: ${{ secrets.SUPABASE_DBNAME }}
+                schema: public
+                threads: 4
+          EOF
+
+      - name: Run dbt
+        run: |
+          dbt debug
+          dbt run --target prod
+          dbt test --target prod
